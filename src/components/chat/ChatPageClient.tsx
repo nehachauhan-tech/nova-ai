@@ -4,8 +4,8 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import NovaLogo from "@/components/ui/NovaLogo";
 import {
-  Sparkles,
   Send,
   Mic,
   MicOff,
@@ -21,19 +21,23 @@ interface Message {
   role: "user" | "assistant";
   content: string | null;
   input_type: "text" | "voice" | "audio_upload";
+  audio_url?: string | null;
   created_at: string;
+  shouldAutoplay?: boolean;
 }
 
 interface ChatPageClientProps {
   conversationId: string;
   initialMessages: Message[];
   isNew: boolean;
+  initialVoice: string;
 }
 
 export default function ChatPageClient({
   conversationId,
   initialMessages,
   isNew,
+  initialVoice,
 }: ChatPageClientProps) {
   const router = useRouter();
   const supabase = createClient();
@@ -45,6 +49,8 @@ export default function ChatPageClient({
   const [activeConvoId, setActiveConvoId] = useState<string | null>(
     isNew ? null : conversationId
   );
+  const [modelId, setModelId] = useState("amazon.nova-pro-v1:0");
+  const [voiceId, setVoiceId] = useState(initialVoice);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -123,6 +129,8 @@ export default function ChatPageClient({
           conversationId: convoId,
           message: userMessage,
           inputType: "text",
+          modelId,
+          voiceId,
         }),
       });
 
@@ -136,7 +144,9 @@ export default function ChatPageClient({
         role: "assistant",
         content: data.response,
         input_type: "text",
+        audio_url: data.audio_url,
         created_at: new Date().toISOString(),
+        shouldAutoplay: true,
       };
       setMessages((prev) => [...prev, assistantMsg]);
 
@@ -146,6 +156,7 @@ export default function ChatPageClient({
         role: "assistant",
         content: data.response,
         input_type: "text",
+        audio_url: data.audio_url,
       });
     } catch (err) {
       console.error("Send text error:", err);
@@ -248,6 +259,7 @@ export default function ChatPageClient({
         role: "user",
         content: `[${inputType === "voice" ? "Voice Recording" : "Audio Upload"}]`,
         input_type: inputType,
+        audio_url: publicUrl,
         created_at: new Date().toISOString(),
       };
       setMessages((prev) => [...prev, tempUserMsg]);
@@ -269,6 +281,7 @@ export default function ChatPageClient({
           conversationId: convoId,
           audioUrl: publicUrl,
           inputType,
+          modelId,
         }),
       });
 
@@ -281,7 +294,9 @@ export default function ChatPageClient({
         role: "assistant",
         content: data.response,
         input_type: "text",
+        audio_url: data.audio_url,
         created_at: new Date().toISOString(),
+        shouldAutoplay: true,
       };
       setMessages((prev) => [...prev, assistantMsg]);
 
@@ -290,6 +305,7 @@ export default function ChatPageClient({
         role: "assistant",
         content: data.response,
         input_type: "text",
+        audio_url: data.audio_url,
       });
     } catch (err) {
       console.error("Audio submit error:", err);
@@ -325,11 +341,48 @@ export default function ChatPageClient({
             <ArrowLeft className="w-4 h-4" />
           </button>
           <Link href="/" className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-accent" />
-            <span className="font-logo text-sm font-bold tracking-wider uppercase">
+            <NovaLogo size={16} />
+            <span className="font-logo text-sm font-bold tracking-wider uppercase hidden sm:block">
               NOVA AI
             </span>
           </Link>
+        </div>
+
+        <div className="flex items-center gap-3">
+          {/* Model Selector */}
+          <select
+            value={modelId}
+            onChange={(e) => setModelId(e.target.value)}
+            className="bg-surface border border-surface-border text-sm font-medium rounded-lg px-2 py-1.5 focus:outline-none focus:border-accent/50 max-w-[140px] truncate"
+          >
+            <option value="amazon.nova-pro-v1:0">Nova Pro</option>
+            <option value="amazon.nova-2-lite-v1:0">Nova 2 Lite</option>
+            <option value="amazon.nova-lite-v1:0">Nova Lite</option>
+            <option value="amazon.nova-micro-v1:0">Nova Micro</option>
+          </select>
+
+          {/* Voice Selector */}
+          <select
+            value={voiceId}
+            onChange={(e) => setVoiceId(e.target.value)}
+            className="bg-surface border border-surface-border text-xs font-medium rounded-lg px-2 py-1.5 focus:outline-none focus:border-accent/50 max-w-[120px] truncate"
+            title="AI Voice"
+          >
+            <optgroup label="Male">
+              <option value="Matthew">Matthew</option>
+              <option value="Stephen">Stephen</option>
+              <option value="Justin">Justin</option>
+              <option value="Arthur">Arthur</option>
+            </optgroup>
+            <optgroup label="Female">
+              <option value="Joanna">Joanna</option>
+              <option value="Salli">Salli</option>
+              <option value="Kendra">Kendra</option>
+              <option value="Ruth">Ruth</option>
+              <option value="Amy">Amy</option>
+              <option value="Emma">Emma</option>
+            </optgroup>
+          </select>
         </div>
       </header>
 
@@ -339,7 +392,7 @@ export default function ChatPageClient({
           {messages.length === 0 && (
             <div className="text-center py-20">
               <div className="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center mx-auto mb-6">
-                <Sparkles className="w-8 h-8 text-accent" />
+                <NovaLogo size={32} />
               </div>
               <h2 className="font-display text-2xl font-bold mb-2">
                 Start a conversation
@@ -368,7 +421,22 @@ export default function ChatPageClient({
                     : "glass-card rounded-bl-md"
                 }`}
               >
-                {msg.content}
+                {/* Hide the bracket text if audio exists and it's a generated marker */}
+                {!(msg.audio_url && msg.role === "user" && msg.content?.startsWith("[")) && (
+                   msg.content
+                )}
+                
+                {/* Render Audio Player if available */}
+                {msg.audio_url && (
+                  <div className={`mt-3 ${msg.role === "user" ? "opacity-90" : ""}`}>
+                    <audio
+                      controls
+                      autoPlay={msg.shouldAutoplay}
+                      src={msg.audio_url}
+                      className="h-10 w-full min-w-[200px] max-w-[280px] rounded-full custom-audio bg-background/50"
+                    />
+                  </div>
+                )}
               </div>
               {msg.role === "user" && (
                 <div className="w-8 h-8 rounded-lg bg-surface-hover flex items-center justify-center shrink-0 mt-1">
@@ -417,15 +485,21 @@ export default function ChatPageClient({
           <button
             onClick={toggleRecording}
             disabled={loading}
-            className={`p-3 rounded-xl shrink-0 transition-all ${
+            className={`p-3 rounded-xl shrink-0 relative transition-all ${
               isRecording
-                ? "bg-red-500/20 border border-red-500/40 text-red-400"
+                ? "bg-red-500/20 text-red-500 animate-pulse border border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.3)]"
                 : "btn-outline"
             } disabled:opacity-50`}
             title={isRecording ? "Stop recording" : "Start voice recording"}
           >
             {isRecording ? (
-              <MicOff className="w-4 h-4" />
+              <>
+                <MicOff className="w-4 h-4" />
+                <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                </span>
+              </>
             ) : (
               <Mic className="w-4 h-4" />
             )}

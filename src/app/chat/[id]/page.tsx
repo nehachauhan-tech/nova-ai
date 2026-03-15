@@ -25,12 +25,21 @@ export default async function ChatPage({ params }: ChatPageProps) {
     redirect("/login");
   }
 
+  // Fetch user preferences for default voice
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("preferences")
+    .eq("id", user.id)
+    .single();
+  const initialVoice = profile?.preferences?.voice || "Matthew";
+
   const isNew = id === "new";
   let initialMessages: {
     id: string;
     role: "user" | "assistant";
     content: string | null;
     input_type: "text" | "voice" | "audio_upload";
+    audio_url?: string | null;
     created_at: string;
   }[] = [];
 
@@ -50,7 +59,7 @@ export default async function ChatPage({ params }: ChatPageProps) {
     // Fetch existing messages
     const { data: messages } = await supabase
       .from("messages")
-      .select("id, role, content, input_type, created_at")
+      .select("id, role, content, input_type, audio_url, created_at")
       .eq("conversation_id", id)
       .order("created_at", { ascending: true });
 
@@ -62,6 +71,7 @@ export default async function ChatPage({ params }: ChatPageProps) {
       conversationId={id}
       initialMessages={initialMessages}
       isNew={isNew}
+      initialVoice={initialVoice}
     />
   );
 }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles } from "lucide-react";
+import NovaLogo from "@/components/ui/NovaLogo";
 import AuthForm from "@/components/auth/AuthForm";
 
 export const metadata = {
@@ -12,9 +12,7 @@ export default function SignupPage() {
     <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center px-6">
       {/* Logo */}
       <Link href="/" className="flex items-center gap-2 mb-10">
-        <div className="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center">
-          <Sparkles className="h-4 w-4 text-accent" />
-        </div>
+        <NovaLogo size={32} />
         <span className="font-logo text-xl font-bold tracking-wider uppercase">
           NOVA AI
         </span>

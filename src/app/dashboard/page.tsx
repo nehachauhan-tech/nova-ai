@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import NovaLogo from "@/components/ui/NovaLogo";
 import {
-  Sparkles,
   Plus,
   MessageSquare,
   LogOut,
   Clock,
+  User,
 } from "lucide-react";
 
 export const metadata = {
@@ -47,9 +48,7 @@ export default async function DashboardPage() {
       <header className="border-b border-surface-border px-6 py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center">
-              <Sparkles className="h-4 w-4 text-accent" />
-            </div>
+            <NovaLogo size={32} />
             <span className="font-logo text-lg font-bold tracking-wider uppercase">
               NOVA AI
             </span>
@@ -59,6 +58,13 @@ export default async function DashboardPage() {
             <span className="text-sm text-text-secondary hidden sm:block">
               {displayName}
             </span>
+            <Link
+              href="/profile"
+              className="btn-outline px-3 py-2 rounded-lg text-xs font-medium flex items-center gap-1.5"
+            >
+              <User className="w-3.5 h-3.5" />
+              Profile
+            </Link>
             <form action="/api/auth/signout" method="POST">
               <button
                 type="submit"
@@ -101,7 +107,7 @@ export default async function DashboardPage() {
               <Link
                 key={convo.id}
                 href={`/chat/${convo.id}`}
-                className="glass-card p-5 flex items-center justify-between group block"
+                className="glass-card p-5 flex items-center justify-between group"
               >
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">

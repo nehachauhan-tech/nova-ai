@@ -34,7 +34,19 @@ export default async function proxy(request: NextRequest) {
   );
 
   // Refreshes the auth token if expired
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // If a user is logged in and tries to access /login or /signup, redirect to dashboard
+  if (user && (request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/signup'))) {
+    return NextResponse.redirect(new URL('/dashboard', request.url));
+  }
+
+  // Handle protected routes
+  if (!user && (request.nextUrl.pathname.startsWith('/dashboard') || request.nextUrl.pathname.startsWith('/chat') || request.nextUrl.pathname.startsWith('/profile'))) {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
 
   return supabaseResponse;
 }

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import HeroSceneLoader from "@/components/three/HeroSceneLoader";
+import NovaLogo from "@/components/ui/NovaLogo";
 import {
-  Sparkles,
   Mic,
   MessageSquareText,
   BrainCircuit,
@@ -10,16 +10,18 @@ import {
   Shield,
   Globe,
 } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       {/* ─── Navbar ─── */}
       <nav className="flex items-center justify-between px-6 py-5 max-w-7xl mx-auto w-full relative z-10">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center">
-            <Sparkles className="h-4 w-4 text-accent" />
-          </div>
+          <NovaLogo size={32} />
           <span className="font-logo text-xl font-bold tracking-wider uppercase">
             NOVA AI
           </span>
@@ -38,18 +40,25 @@ export default function Home() {
         </div>
 
         <div className="flex items-center gap-3">
-          <Link
-            href="/login"
-            className="text-sm font-medium hidden sm:block text-text-secondary hover:text-foreground transition-colors duration-300"
-          >
-            Log In
-          </Link>
-          <button className="btn-accent px-5 py-2.5 rounded-full text-sm font-semibold">
-            <span className="flex items-center gap-2">
-              Get Started
+          {user ? (
+            <Link href="/dashboard" className="btn-accent px-5 py-2.5 rounded-full text-sm font-semibold flex items-center gap-2">
+              Dashboard
               <ArrowRight className="w-4 h-4" />
-            </span>
-          </button>
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="text-sm font-medium hidden sm:block text-text-secondary hover:text-foreground transition-colors duration-300"
+              >
+                Log In
+              </Link>
+              <Link href="/login" className="btn-accent px-5 py-2.5 rounded-full text-sm font-semibold flex items-center gap-2">
+                Get Started
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </>
+          )}
         </div>
       </nav>
 
@@ -88,16 +97,14 @@ export default function Home() {
           </p>
 
           <div className="animate-fade-in-up-delay-3 mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button className="btn-accent w-full sm:w-auto px-8 py-4 rounded-full text-base font-semibold">
-              <span className="flex items-center justify-center gap-2">
-                Try Nova AI Free
-                <ArrowRight className="w-5 h-5" />
-              </span>
-            </button>
-            <button className="btn-outline w-full sm:w-auto px-8 py-4 rounded-full text-base font-medium flex items-center justify-center gap-2">
+            <Link href={user ? "/dashboard" : "/login"} className="btn-accent w-full sm:w-auto px-8 py-4 rounded-full text-base font-semibold flex items-center justify-center gap-2">
+              {user ? "Go to Dashboard" : "Try Nova AI Free"}
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+            <Link href={user ? "/chat/new" : "/login"} className="btn-outline w-full sm:w-auto px-8 py-4 rounded-full text-base font-medium flex items-center justify-center gap-2">
               <Mic className="w-5 h-5" />
               Voice Demo
-            </button>
+            </Link>
           </div>
         </div>
       </main>
@@ -257,12 +264,15 @@ export default function Home() {
             Start a conversation with Nova AI. Type, speak, or upload — it
             understands it all.
           </p>
-          <button className="btn-accent px-10 py-5 rounded-full text-lg font-bold">
+          <Link 
+            href={user ? "/dashboard" : "/login"} 
+            className="btn-accent px-10 py-5 rounded-full text-lg font-bold inline-block"
+          >
             <span className="flex items-center gap-2">
-              Start for Free
+              {user ? "Back to Dashboard" : "Start for Free"}
               <ArrowRight className="w-5 h-5" />
             </span>
-          </button>
+          </Link>
         </div>
       </section>
 
@@ -270,7 +280,7 @@ export default function Home() {
       <footer className="border-t border-surface-border px-6 py-8">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between text-text-muted text-sm gap-4">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-accent" />
+            <NovaLogo size={16} />
             <span className="font-logo tracking-wider text-xs uppercase">
               Nova AI
             </span>

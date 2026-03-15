@@ -1,132 +1,305 @@
 import Link from "next/link";
-import { Sparkles, Image as ImageIcon, Layout, ArrowRight, Code } from "lucide-react";
+import HeroSceneLoader from "@/components/three/HeroSceneLoader";
+import {
+  Sparkles,
+  Mic,
+  MessageSquareText,
+  BrainCircuit,
+  ArrowRight,
+  Zap,
+  Shield,
+  Globe,
+} from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Navbar */}
-      <nav className="flex items-center justify-between p-6 max-w-7xl mx-auto w-full">
-        <div className="flex items-center gap-2">
-          <Sparkles className="h-6 w-6 text-brand-primary" />
-          <span className="font-logo text-2xl font-bold tracking-tight uppercase">NOVA AI</span>
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
+      {/* ─── Navbar ─── */}
+      <nav className="flex items-center justify-between px-6 py-5 max-w-7xl mx-auto w-full relative z-10">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center">
+            <Sparkles className="h-4 w-4 text-accent" />
+          </div>
+          <span className="font-logo text-xl font-bold tracking-wider uppercase">
+            NOVA AI
+          </span>
         </div>
-        <div className="hidden md:flex gap-8 text-sm font-semibold tracking-wide uppercase">
-          <Link href="#features" className="hover:text-black/60 transition-colors">Features</Link>
-          <Link href="#pricing" className="hover:text-black/60 transition-colors">Pricing</Link>
-          <Link href="#about" className="hover:text-black/60 transition-colors">About</Link>
+
+        <div className="hidden md:flex gap-8 text-sm font-medium tracking-wide text-text-secondary">
+          <Link href="#features" className="hover:text-foreground transition-colors duration-300">
+            Features
+          </Link>
+          <Link href="#capabilities" className="hover:text-foreground transition-colors duration-300">
+            Capabilities
+          </Link>
+          <Link href="#about" className="hover:text-foreground transition-colors duration-300">
+            About
+          </Link>
         </div>
-        <div className="flex items-center gap-4">
-          <Link href="/login" className="text-sm font-semibold hidden sm:block hover:text-black/60 transition-colors uppercase">
+
+        <div className="flex items-center gap-3">
+          <Link
+            href="/login"
+            className="text-sm font-medium hidden sm:block text-text-secondary hover:text-foreground transition-colors duration-300"
+          >
             Log In
           </Link>
-          <button className="bg-brand-primary text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-brand-primary-hover transition-all active:scale-95 duration-200">
-            Start Creating
+          <button className="btn-accent px-5 py-2.5 rounded-full text-sm font-semibold">
+            <span className="flex items-center gap-2">
+              Get Started
+              <ArrowRight className="w-4 h-4" />
+            </span>
           </button>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <main className="flex-1 flex flex-col items-center justify-center px-6 text-center mt-20 md:mt-32 max-w-5xl mx-auto">
-        <h1 className="font-display text-6xl md:text-8xl lg:text-9xl tracking-tighter leading-none font-bold text-foreground">
-          DESIGN<br/>
-          <span className="italic font-light">REIMAGINED.</span>
-        </h1>
-        
-        <p className="mt-8 text-lg md:text-xl max-w-2xl text-foreground/80 font-sans leading-relaxed">
-          The premium AI studio for creators. Generate breathtaking assets, build immersive product configurators, and export seamless code instantly.
-        </p>
-        
-        <div className="mt-12 flex flex-col sm:flex-row items-center gap-4">
-          <button className="w-full sm:w-auto bg-brand-primary text-white px-8 py-4 rounded-full text-base font-semibold hover:bg-brand-primary-hover transition-all flex items-center justify-center gap-2 group shadow-xl shadow-black/10 active:scale-95 duration-200">
-            Try Nova AI Free
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </button>
-          <button className="w-full sm:w-auto bg-transparent text-brand-primary px-8 py-4 rounded-full text-base font-semibold border-2 border-brand-primary hover:bg-black/5 transition-all flex items-center justify-center gap-2 active:scale-95 duration-200">
-            <Layout className="w-5 h-5" />
-            View Gallery
-          </button>
+      {/* ─── Hero Section ─── */}
+      <main className="relative flex-1 flex flex-col items-center justify-center px-6 text-center mt-16 md:mt-24 max-w-5xl mx-auto overflow-visible">
+        {/* 3D Background — rendered behind text */}
+        <HeroSceneLoader />
+
+        {/* Radial glow behind hero */}
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full animate-glow-pulse pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(108,99,255,0.12) 0%, transparent 70%)",
+          }}
+          aria-hidden="true"
+        />
+
+        <div className="relative z-10">
+          {/* Badge */}
+          <div className="animate-fade-in-up inline-flex items-center gap-2 px-4 py-2 rounded-full border border-surface-border bg-surface text-sm text-text-secondary mb-8">
+            <Zap className="w-3.5 h-3.5 text-accent" />
+            Powered by Amazon Nova on AWS Bedrock
+          </div>
+
+          <h1 className="animate-fade-in-up-delay-1 font-display text-5xl md:text-7xl lg:text-8xl tracking-tighter leading-[0.9] font-bold">
+            <span className="gradient-text">Speak.</span>
+            <br />
+            <span className="text-foreground">Think.</span>
+            <br />
+            <span className="italic font-light text-text-secondary">Create.</span>
+          </h1>
+
+          <p className="animate-fade-in-up-delay-2 mt-8 text-base md:text-lg max-w-xl mx-auto text-text-muted leading-relaxed">
+            The multi-modal AI assistant. Interact through voice, text, or audio — powered by cutting-edge Nova models via AWS Bedrock.
+          </p>
+
+          <div className="animate-fade-in-up-delay-3 mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button className="btn-accent w-full sm:w-auto px-8 py-4 rounded-full text-base font-semibold">
+              <span className="flex items-center justify-center gap-2">
+                Try Nova AI Free
+                <ArrowRight className="w-5 h-5" />
+              </span>
+            </button>
+            <button className="btn-outline w-full sm:w-auto px-8 py-4 rounded-full text-base font-medium flex items-center justify-center gap-2">
+              <Mic className="w-5 h-5" />
+              Voice Demo
+            </button>
+          </div>
         </div>
       </main>
 
-      {/* Value Patter Divider */}
-      <div className="w-full overflow-hidden whitespace-nowrap bg-brand-primary text-white py-4 mt-32 md:mt-48 rotate-1 scale-105 shadow-2xl">
-        <div className="inline-block animate-[scroll_20s_linear_infinite] font-logo text-xl tracking-widest font-bold">
-          <span className="mx-8">•</span> HIGH QUALITY AI <span className="mx-8">•</span> SEAMLESS INTEGRATION <span className="mx-8">•</span> RAPID PROTOTYPING <span className="mx-8">•</span> PRODUCTION READY <span className="mx-8">•</span> HIGH QUALITY AI <span className="mx-8">•</span> SEAMLESS INTEGRATION <span className="mx-8">•</span> RAPID PROTOTYPING <span className="mx-8">•</span> PRODUCTION READY
+      {/* ─── Marquee Banner ─── */}
+      <div className="w-full overflow-hidden whitespace-nowrap py-5 mt-32 md:mt-44 border-y border-surface-border">
+        <div className="inline-block animate-scroll-marquee font-logo text-sm tracking-[0.3em] text-text-muted uppercase">
+          <span className="mx-6 opacity-30">◆</span> MULTI-MODAL AI
+          <span className="mx-6 opacity-30">◆</span> VOICE INPUT
+          <span className="mx-6 opacity-30">◆</span> TEXT INPUT
+          <span className="mx-6 opacity-30">◆</span> AUDIO PROCESSING
+          <span className="mx-6 opacity-30">◆</span> AWS BEDROCK
+          <span className="mx-6 opacity-30">◆</span> REAL-TIME RESPONSES
+          <span className="mx-6 opacity-30">◆</span> MULTI-MODAL AI
+          <span className="mx-6 opacity-30">◆</span> VOICE INPUT
+          <span className="mx-6 opacity-30">◆</span> TEXT INPUT
+          <span className="mx-6 opacity-30">◆</span> AUDIO PROCESSING
+          <span className="mx-6 opacity-30">◆</span> AWS BEDROCK
+          <span className="mx-6 opacity-30">◆</span> REAL-TIME RESPONSES
         </div>
       </div>
 
-      {/* Features Section */}
-      <section id="features" className="py-32 px-6 max-w-7xl mx-auto w-full">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+      {/* ─── Features Section ─── */}
+      <section id="features" className="py-28 px-6 max-w-7xl mx-auto w-full">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <div>
-            <h2 className="font-display text-4xl md:text-5xl font-bold">The Ultimate Toolkit</h2>
-            <p className="mt-4 text-foreground/70 max-w-md">Everything you need to go from concept to production in minutes, not days.</p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Feature 1 */}
-          <div className="bg-white p-8 rounded-3xl border border-black/5 hover:border-black/20 hover:shadow-xl transition-all group duration-300">
-            <div className="w-14 h-14 bg-black/5 rounded-2xl flex items-center justify-center mb-6 text-brand-primary group-hover:scale-110 transition-transform">
-              <ImageIcon className="w-7 h-7" />
-            </div>
-            <h3 className="text-xl font-bold font-display mb-3">AI Image Generation</h3>
-            <p className="text-foreground/70 leading-relaxed text-sm">
-              Powered by advanced generative models. Create stunning, high-resolution visuals tailored precisely to your brand guidelines.
+            <p className="text-accent text-sm font-semibold tracking-widest uppercase mb-3">
+              Input Modes
             </p>
-          </div>
-          
-          {/* Feature 2 */}
-          <div className="bg-white p-8 rounded-3xl border border-black/5 hover:border-black/20 hover:shadow-xl transition-all group duration-300">
-            <div className="w-14 h-14 bg-black/5 rounded-2xl flex items-center justify-center mb-6 text-brand-primary group-hover:scale-110 transition-transform">
-              <Layout className="w-7 h-7" />
-            </div>
-            <h3 className="text-xl font-bold font-display mb-3">Product Configurators</h3>
-            <p className="text-foreground/70 leading-relaxed text-sm">
-              Build interactive 3D and 2D product viewers instantly. Allow your users to customize with unparalleled realism.
-            </p>
-          </div>
-
-          {/* Feature 3 */}
-          <div className="bg-white p-8 rounded-3xl border border-black/5 hover:border-black/20 hover:shadow-xl transition-all group duration-300">
-            <div className="w-14 h-14 bg-black/5 rounded-2xl flex items-center justify-center mb-6 text-brand-primary group-hover:scale-110 transition-transform">
-              <Code className="w-7 h-7" />
-            </div>
-            <h3 className="text-xl font-bold font-display mb-3">Seamless Export</h3>
-            <p className="text-foreground/70 leading-relaxed text-sm">
-              Generate production-ready React, Vue, or vanilla web code. Export directly to your favorite frameworks in one click.
+            <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tight">
+              Your Way, Your Voice
+            </h2>
+            <p className="mt-4 text-text-muted max-w-md text-base leading-relaxed">
+              Interact with Nova AI through any modality that feels natural to you.
             </p>
           </div>
         </div>
-      </section>
 
-      {/* CTA Footer Section */}
-      <section className="bg-brand-primary text-white py-32 px-6 mt-16 text-center rounded-t-[3rem] shadow-[-10px_-10px_30px_rgba(0,0,0,0.1)] mx-2">
-        <h2 className="font-display text-5xl md:text-7xl font-bold mb-8">Ready to build?</h2>
-        <p className="text-white/70 max-w-xl mx-auto mb-12 text-lg">
-          Join thousands of designers and developers pushing the boundaries of what is possible on the web.
-        </p>
-        <button className="bg-white text-brand-primary px-10 py-5 rounded-full text-lg font-bold hover:bg-gray-100 transition-colors shadow-xl active:scale-95 duration-200">
-          Get Started For Free
-        </button>
-        
-        <div className="mt-32 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between text-white/50 text-sm max-w-6xl mx-auto">
-          <p>© 2026 Nova AI Studio. All rights reserved.</p>
-          <div className="flex gap-6 mt-4 md:mt-0 font-semibold tracking-wider uppercase text-xs">
-            <Link href="#" className="hover:text-white transition-colors">Twitter</Link>
-            <Link href="#" className="hover:text-white transition-colors">GitHub</Link>
-            <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Voice Input */}
+          <div className="glass-card p-8 group">
+            <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-colors duration-300">
+              <Mic className="w-6 h-6 text-accent" />
+            </div>
+            <h3 className="text-lg font-bold font-display mb-3">
+              Voice Input
+            </h3>
+            <p className="text-text-muted text-sm leading-relaxed">
+              Speak naturally using your microphone. Nova transcribes and processes your voice in real-time for fluid, hands-free interaction.
+            </p>
+          </div>
+
+          {/* Text Input */}
+          <div className="glass-card p-8 group">
+            <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-colors duration-300">
+              <MessageSquareText className="w-6 h-6 text-accent" />
+            </div>
+            <h3 className="text-lg font-bold font-display mb-3">
+              Text Prompts
+            </h3>
+            <p className="text-text-muted text-sm leading-relaxed">
+              Type detailed prompts, questions, or instructions. Full markdown support with rich formatting for precise communication.
+            </p>
+          </div>
+
+          {/* Audio Upload */}
+          <div className="glass-card p-8 group">
+            <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-colors duration-300">
+              <BrainCircuit className="w-6 h-6 text-accent" />
+            </div>
+            <h3 className="text-lg font-bold font-display mb-3">
+              Audio Upload
+            </h3>
+            <p className="text-text-muted text-sm leading-relaxed">
+              Upload audio files directly. Nova analyzes, transcribes, and responds to pre-recorded audio seamlessly.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Internal style for the marquee animation */}
-      <style dangerouslySetInnerHTML={{__html: `
-        @keyframes scroll {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-      `}} />
+      {/* ─── Capabilities Section ─── */}
+      <section
+        id="capabilities"
+        className="py-28 px-6 max-w-7xl mx-auto w-full"
+      >
+        <div className="text-center mb-16">
+          <p className="text-accent-secondary text-sm font-semibold tracking-widest uppercase mb-3">
+            Why Nova AI
+          </p>
+          <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tight">
+            Built for the Future
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[
+            {
+              icon: <Zap className="w-5 h-5" />,
+              title: "Lightning Fast",
+              description:
+                "Optimized inference via AWS Bedrock. Get responses in milliseconds, not seconds.",
+            },
+            {
+              icon: <Shield className="w-5 h-5" />,
+              title: "Enterprise Secure",
+              description:
+                "Your data stays yours. No training on your inputs. Full compliance with enterprise standards.",
+            },
+            {
+              icon: <Globe className="w-5 h-5" />,
+              title: "Multi-Language",
+              description:
+                "Nova understands and responds in multiple languages natively across all input modes.",
+            },
+          ].map((item) => (
+            <div
+              key={item.title}
+              className="glass-card p-8 animate-shimmer group"
+            >
+              <div className="w-10 h-10 rounded-lg bg-accent-secondary/10 flex items-center justify-center mb-5 text-accent-secondary group-hover:bg-accent-secondary/20 transition-colors duration-300">
+                {item.icon}
+              </div>
+              <h3 className="text-base font-bold font-display mb-2">
+                {item.title}
+              </h3>
+              <p className="text-text-muted text-sm leading-relaxed">
+                {item.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── CTA Footer ─── */}
+      <section className="relative py-32 px-6 text-center overflow-hidden">
+        {/* Background gradient */}
+        <div
+          className="absolute inset-0 animate-gradient-shift"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(108,99,255,0.08) 0%, rgba(0,212,170,0.05) 50%, rgba(108,99,255,0.08) 100%)",
+          }}
+          aria-hidden="true"
+        />
+        <div
+          className="absolute inset-0 border-t border-surface-border"
+          aria-hidden="true"
+        />
+
+        <div className="relative z-10 max-w-3xl mx-auto">
+          <h2 className="font-display text-4xl md:text-6xl font-bold mb-6 tracking-tight">
+            Ready to experience
+            <br />
+            <span className="gradient-text">the future?</span>
+          </h2>
+          <p className="text-text-muted max-w-lg mx-auto mb-10 text-base leading-relaxed">
+            Start a conversation with Nova AI. Type, speak, or upload — it
+            understands it all.
+          </p>
+          <button className="btn-accent px-10 py-5 rounded-full text-lg font-bold">
+            <span className="flex items-center gap-2">
+              Start for Free
+              <ArrowRight className="w-5 h-5" />
+            </span>
+          </button>
+        </div>
+      </section>
+
+      {/* ─── Footer ─── */}
+      <footer className="border-t border-surface-border px-6 py-8">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between text-text-muted text-sm gap-4">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-accent" />
+            <span className="font-logo tracking-wider text-xs uppercase">
+              Nova AI
+            </span>
+            <span className="opacity-50">
+              © {new Date().getFullYear()}
+            </span>
+          </div>
+          <div className="flex gap-6 font-medium tracking-wider uppercase text-xs">
+            <Link
+              href="#"
+              className="hover:text-foreground transition-colors duration-300"
+            >
+              Twitter
+            </Link>
+            <Link
+              href="#"
+              className="hover:text-foreground transition-colors duration-300"
+            >
+              GitHub
+            </Link>
+            <Link
+              href="#"
+              className="hover:text-foreground transition-colors duration-300"
+            >
+              Terms
+            </Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
